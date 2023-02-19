@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -7,13 +9,14 @@ const productRoutes = require('./routes/product');
 const userRoutes = require('./routes/user');
 
 mongoose
-  .connect('mongodb+srv://Florent:qApJwaqykkLDOiTb@openclassroomdb.m7qcpaq.mongodb.net/?retryWrites=true&w=majority',
+  .connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_NAME}.m7qcpaq.mongodb.net/?retryWrites=true&w=majority`,
     { useNewUrlParser: true,
       useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

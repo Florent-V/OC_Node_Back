@@ -3,25 +3,20 @@
 const Thing = require("../models/thing");
 
 const createThing = (req, res, next) => {
+  const thingObject = JSON.parse(req.body.thing);
+  delete thingObject._id;
+  delete thingObject._userId;
   const thing = new Thing({
-    title: req.body.title,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    userId: req.body.userId,
+    title: thingObject.title,
+    description: thingObject.description,
+    price: thingObject.price,
+      userId: req.auth.userId,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   });
-  thing
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "Post saved successfully!",
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
-    });
+
+  thing.save()
+  .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
+  .catch(error => { res.status(400).json( { error })})
 };
 
 const getOneThing = (req, res, next) => {
